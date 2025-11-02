@@ -3,7 +3,7 @@
 import { useSession } from 'next-auth/react';
 import { useState, useEffect, FormEvent } from 'react';
 import { Container, Alert, Spinner, Table, Button, Form, Card, Row, Col, Modal } from 'react-bootstrap';
-import { Role } from '@/generated/prisma/client';
+import { Role } from '@prisma/client';
 import Link from 'next/link';
 
 interface User {

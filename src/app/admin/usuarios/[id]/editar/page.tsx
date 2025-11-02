@@ -4,7 +4,7 @@ import { useState, useEffect, FormEvent } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Container, Form, Button, Card, Alert, Spinner } from 'react-bootstrap';
-import { Role } from '@/generated/prisma/client';
+import { Role } from '@prisma/client';
 
 interface User {
   username: string;
