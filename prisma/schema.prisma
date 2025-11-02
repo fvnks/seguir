@@ -1,0 +1,131 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum PaymentStatus {
+  DEUDOR
+  PAGADO
+  PENDIENTE
+}
+
+model Cliente {
+  id            Int           @id @default(autoincrement())
+  nombre        String        // Legacy, to be deprecated
+  razonSocial   String?
+  rut           String?       @unique
+  email         String        @unique
+  telefono      String?
+  direccion     String?
+  comuna        String?
+  latitud       Float?
+  longitud      Float?
+  mediosDePago  String?       @db.Text
+  paymentStatus PaymentStatus @default(PENDIENTE)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  ventas        Venta[]
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+}
+
+model Venta {
+  id                Int             @id @default(autoincrement())
+  fecha             DateTime
+  descripcion       String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  cliente           Cliente         @relation(fields: [clienteId], references: [id])
+  clienteId         Int
+  productosVendidos VentaProducto[]
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+}
+
+model VentaProducto {
+  id              Int      @id @default(autoincrement())
+  cantidad        Int
+  precioAlMomento Float // Price of the product at the time of sale
+  descuento       Float    @default(0)
+
+  venta      Venta    @relation(fields: [ventaId], references: [id])
+  ventaId    Int
+  producto   Producto @relation(fields: [productoId], references: [id])
+  productoId Int
+}
+
+model Producto {
+  id          Int      @id @default(autoincrement())
+  codigo      String   @unique
+  nombre      String
+  precioNeto  Float
+  precioTotal Float
+  precioKilo  Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  categoria   Categoria? @relation(fields: [categoriaId], references: [id])
+  categoriaId Int?
+  ventas      VentaProducto[]
+}
+
+model Categoria {
+  id        Int        @id @default(autoincrement())
+  nombre    String     @unique
+  productos Producto[]
+}
+
+model Setting {
+  key   String @id @unique
+  value String @db.Text
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  username      String         @unique
+  password      String
+  email         String?        @unique
+  role          Role           @default(USER)
+  nombre        String?
+  apellido      String?
+  rut           String?        @unique
+  zona          String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  clientes      Cliente[]
+  ventas        Venta[]
+  announcements Announcement[]
+  newsArticles  NewsArticle[]
+}
+
+model Announcement {
+  id        Int      @id @default(autoincrement())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  isActive  Boolean  @default(true)
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
+
+model NewsArticle {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
