@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { Container, Row, Col, Card, ListGroup, Spinner, Alert, Button, Table, Badge, Dropdown } from 'react-bootstrap';
-import { PaymentStatus } from '@/generated/prisma';
+import { PaymentStatus } from '@prisma/client';
 
 // Define types
 interface VentaProducto {

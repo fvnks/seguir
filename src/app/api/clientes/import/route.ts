@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import * as xlsx from 'xlsx';
-import { PaymentStatus } from "@/generated/prisma";
+import { PaymentStatus } from '@prisma/client';
 
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);

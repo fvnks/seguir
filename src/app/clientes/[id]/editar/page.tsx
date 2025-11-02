@@ -14,7 +14,7 @@ import {
 } from "react-bootstrap";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { PaymentStatus } from "@/generated/prisma";
+import { PaymentStatus } from '@prisma/client';
 
 // Dynamically import the MapSelector component
 const MapSelector = dynamic(() => import("@/components/MapSelector"), {
